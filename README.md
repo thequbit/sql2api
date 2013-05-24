@@ -58,7 +58,11 @@ The script generated the following files:
 
 These files are generated using the nomenclatures within the SQL that were passed into the script.  All naming conventions are carried through across all generated files.
 
--- PHP --
+NOTE: you *must* edit sqlcredentials.php and sqlcreds.txt to add your specific SQL credentials.  (todo: I will add grant keyword parsing to parse() function within generate.py at some point)
+
+
+PHP
+---
 The php files that are generated are very easy to use, and are class based.  Let's look at the CommentManager.class.php file, five functions were auto generated:
 
 	class CommentsManager
@@ -85,7 +89,8 @@ These functions within the Comments Manager class can be called as such:
 	// report success
 	echo "Succes!";
 	
--- Python --
+Python
+------
 The python files that are generated are intended to be used with additional python scripts that are generating data or pulling in data from other places.  They can also be used with python web frame works such as DJango or Flask.
 
 Looking at the comments.py file, this is what is created:
@@ -104,7 +109,7 @@ This class can be used very simply as follows:
 	from comments import comments
 
 	def add_comment(entryid):
-		c = comments()
+		c = comments('sqlcreds.txt')
 		comments.add("This blog is awesome!",entryid)
 		return True
 
