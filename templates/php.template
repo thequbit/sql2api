@@ -4,20 +4,98 @@
 
 	class <!camel_table_name!>Manager
 	{
-		function add()
+		function add(<!phpafied_column_names!>)
 		{
+			try
+			{
+				$db = new DatabaseTool(); 
+				$query = 'INSERT INTO <!table_name!>(<!csv_no_primary_key_column_names!>) VALUES(<!insert_value_string!>)';
+				$mysqli = $db->Connect();
+				$stmt = $mysqli->prepare($query);
+				$stmt->bind_param("<!insert_s_string!>", <!phpafied_column_names!>);
+				$results = $db->Execute($stmt);
+			
+				$row = $results[0];
+				$retVal = (object) array(<!array_contents!>);
+	
+				$db->Close($mysqli, $stmt);
+			}
+			catch (Exception $e)
+			{
+				error_log( "Caught exception: " . $e->getMessage() );
+			}
+		
+			return $retVal;
 		}
 
-		function get()
+		function get($<!column_name_primary_key!>)
 		{
+			try
+			{
+				$db = new DatabaseTool(); 
+				$query = 'SELECT * FROM <!table_name!> WHERE <!column_name_primary_key!> = ?';
+				$mysqli = $db->Connect();
+				$stmt = $mysqli->prepare($query);
+				$stmt->bind_param("s", $<!column_name_primary_key!>);
+				$results = $db->Execute($stmt);
+			
+				$row = $results[0];
+				$retVal = (object) array(<!array_contents!>);
+	
+				$db->Close($mysqli, $stmt);
+			}
+			catch (Exception $e)
+			{
+				error_log( "Caught exception: " . $e->getMessage() );
+			}
+		
+			return $retVal;
 		}
 
 		function getall()
 		{
+			try
+			{
+				$db = new DatabaseTool(); 
+				$query = 'SELECT * FROM <!table_name!>';
+				$mysqli = $db->Connect();
+				$stmt = $mysqli->prepare($query);
+				$results = $db->Execute($stmt);
+			
+				$retArray = array();
+				foreach( $results as $row )
+				{
+					$object = (object) array(<!array_contents!>);
+					$retArray[] = $object;
+				}
+	
+				$db->Close($mysqli, $stmt);
+			}
+			catch (Exception $e)
+			{
+				error_log( "Caught exception: " . $e->getMessage() );
+			}
+		
+			return $retArray;
 		}
 
-		function delete()
+		function delete(<!column_name_primary_key!>)
 		{
+			try
+			{
+				$db = new DatabaseTool(); 
+				$query = 'DELETE FROM <!table_name!> WHERE <!column_name_primary_key!> = ?)';
+				$mysqli = $db->Connect();
+				$stmt = $mysqli->prepare($query);
+				$stmt->bind_param("s", $<!column_name_primary_key!>);
+				$results = $db->Execute($stmt);
+	
+				$db->Close($mysqli, $stmt);
+			}
+			catch (Exception $e)
+			{
+				error_log( "Caught exception: " . $e->getMessage() );
+			}
 		}
 
 		function update()
@@ -25,3 +103,4 @@
 		}
 	}
 
+?>
