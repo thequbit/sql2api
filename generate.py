@@ -6,16 +6,27 @@ import shutil
 
 def parse(sql):
 
-    print "Parsing:\n\n{0}\n\n".format(sql)
+    sql = sql.replace("\t","");
+
+    sql = sql.strip()
 
     # make multiple spaces into single space
     re.sub(' +',' ',sql)
 
+    #print "Parsing:\n\n{0}\n\n".format(sql)
+
+    print "[INFO] Parsing SQL ..."
+
     statements = sql.split(";")
+
+    #print statements
 
     tables = []
 
     for statement in statements:
+        
+        statement = statement.strip()
+
         parts = statement.split(" ")
 
         if parts[0].lower() == "create" and len(parts) >= 2:
@@ -24,14 +35,14 @@ def parse(sql):
 
                 dbname = parts[2].strip().replace(";","")
 
-                print "Database Name: {0}".format(dbname)
+                print "[INFO] Database Name: {0}".format(dbname)
 
         
             if parts[1].lower() == "table" and len(parts) >= 3:
                 
                 tname = parts[2].split("(")[0].strip()
                
-                print "{0}:".format(tname)
+                print "[INFO] Found Table: {0}".format(tname)
  
                 columns = []
                 
@@ -49,15 +60,18 @@ def parse(sql):
                         cisprimarykey = False
 
                     if cname.lower() != "foreign":
-                        print "\t{0} : {1}".format(cname,ctype,cisprimarykey)
+                        #print "\t{0} : {1}".format(cname,ctype,cisprimarykey)
                         columns.append((cname,ctype,cisprimarykey))
 
                 tables.append((tname,columns))
 
-                print ""
     return (dbname,tables)
 
 def createpython(dbname,tables):
+
+    print "[INFO] Generating Python Classes ..."
+
+    python = ""
 
     if not os.path.exists("python"):
         os.makedirs("python")
@@ -124,6 +138,10 @@ def createpython(dbname,tables):
     return python
 
 def createphp(dbname,tables):
+
+    print "[INFO] Generating PHP Classes ..."
+
+    php = ""
 
     if not os.path.exists("php"):
         os.makedirs("php")
@@ -200,12 +218,12 @@ def createphp(dbname,tables):
             f.close()
 
         with open("./php/sqlcredentials.php","w") as f:
-            f.write("<?php")
-            f.write("define('MYSQL_HOST','');")
-            f.write("define('MYSQL_USER','');")
-            f.write("define('MYSQL_PASS','');")
-            f.write("define('MYSQL_DATABASE','{0}');".format(dbname))
-            f.write("?>")
+            f.write("<?php\n")
+            f.write("\tdefine('MYSQL_HOST','');\n")
+            f.write("\tdefine('MYSQL_USER','');\n")
+            f.write("\tdefine('MYSQL_PASS','');\n")
+            f.write("\tdefine('MYSQL_DATABASE','{0}');\n".format(dbname))
+            f.write("?>\n")
             f.close()
 
         shutil.copy2("../templates/DatabaseTool.class.php", "./php")
@@ -217,7 +235,7 @@ def createphp(dbname,tables):
 # application entry point
 if __name__ == "__main__":
     
-    print "Application starting ..."
+    print "Application starting ...\n"
 
     parser = argparse.ArgumentParser(description='Process inputs.')
     parser.add_argument('sql_script', type=str, help='input sql script')
@@ -236,25 +254,11 @@ if __name__ == "__main__":
         os.makedirs(dbname)
     os.chdir(dbname)
 
-    print "Tables:\n\n{0}\n\n".format(tables)
-
-    print "Creating Python DB Layer ..."
-
     python = createpython(dbname,tables)
-
-    print "Python:\n\n{0}\n\n".format(python)
-
-    print "... Done."
-
-    print "Creating PHP5 JSON API Classes ..."
 
     php = createphp(dbname,tables)
 
-    print "PHP:\n\n{0}\n\n".format(php)
-
-    print "... Done."
-
     os.chdir("..")
 
-    print "Application exiting ..."
+    print "\nApplication exiting ...\n"
 
