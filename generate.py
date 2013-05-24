@@ -2,6 +2,7 @@ import sys
 import argparse
 import re
 import os
+import shutil
 
 def parse(sql):
 
@@ -128,7 +129,7 @@ def createphp(dbname,tables):
         os.makedirs("php")
 
     apifile = open("./php/getall.php","w")
-    apifile.write('<?\n\n\trequire_once("DatabaseTool.class.php");\n\n\t$from = $_GET["from"];\n\n\tswitch($from)\n\t{\n\t\tdefault:\n\t\techo "{}";\n\t\tbreak;\n\n')
+    apifile.write('<?\n\n\trequire_once("DatabaseTool.class.php");\n\n\t$from = $_GET["from"];\n\n\tswitch($from)\n\t{\n\t\tdefault:\n\t\t\techo "{}";\n\t\t\tbreak;\n\n')
 
     for table in tables:
 
@@ -191,10 +192,10 @@ def createphp(dbname,tables):
         php = php.replace("<!array_contents!>",array_contents)
         php = php.replace("<!column_name_primary_key!>",column_name_primary_key)
 
-        apifile.write("\t\tcase \"{0}\":\n\t\trequire_once(\"{1}Manager.class.php\");\n\t\t$mgr = new {1}Manager();\n".format(table_name,camel_table_name))
-        apifile.write("\t\techo json_encode($mgr->getall);\n\t\tbreak;\n\n");
+        apifile.write("\t\tcase \"{0}\":\n\t\t\trequire_once(\"{1}Manager.class.php\");\n\t\t\t$mgr = new {1}Manager();\n".format(table_name,camel_table_name))
+        apifile.write("\t\t\techo json_encode($mgr->getall());\n\t\t\tbreak;\n\n");
 
-        with open("./php/{0}.py".format(tablename),"w") as f:
+        with open("./php/{0}Manager.class.php".format(camel_table_name),"w") as f:
             f.write(php)
             f.close()
 
@@ -206,6 +207,10 @@ def createphp(dbname,tables):
             f.write("define('MYSQL_DATABASE','{0}');".format(dbname))
             f.write("?>")
             f.close()
+
+        shutil.copy2("../templates/DatabaseTool.class.php", "./php")
+
+    apifile.write("\t}\n\n?>")
 
     return php
 
