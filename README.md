@@ -31,19 +31,19 @@ First, we create our sql that creates our database and tables within it:
 	
 Now that we have defined our database structure, we can pass it into sql2api's generate.py script, and it will generate some python classes so we can interface to the database, as well as some php code that will serv up json's of the data within the database.
 
-$ python generate.py myblog.sql
-Application starting ...
+	$ python generate.py myblog.sql
+	Application starting ...
 
-[INFO] Parsing SQL ...
-[INFO] Database Name: myblog
-[INFO] Found Table: entries
-[INFO] Found Table: comments
-[INFO] Generating Python Classes ...
-[INFO] Generating PHP Classes ...
+	[INFO] Parsing SQL ...
+	[INFO] Database Name: myblog
+	[INFO] Found Table: entries
+	[INFO] Found Table: comments
+	[INFO] Generating Python Classes ...
+	[INFO] Generating PHP Classes ...
 
-Application exiting ...
+	Application exiting ...
 
-$
+	$
 
 The script generated the following files:
 
@@ -58,7 +58,11 @@ The script generated the following files:
 
 These files are generated using the nomenclatures within the SQL that were passed into the script.  All naming conventions are carried through across all generated files.
 
--- PHP --
+NOTE: you *must* edit sqlcredentials.php and sqlcreds.txt to add your specific SQL credentials.  (todo: I will add grant keyword parsing to parse() function within generate.py at some point)
+
+
+PHP
+---
 The php files that are generated are very easy to use, and are class based.  Let's look at the CommentManager.class.php file, five functions were auto generated:
 
 	class CommentsManager
@@ -85,7 +89,8 @@ These functions within the Comments Manager class can be called as such:
 	// report success
 	echo "Succes!";
 	
--- Python --
+Python
+------
 The python files that are generated are intended to be used with additional python scripts that are generating data or pulling in data from other places.  They can also be used with python web frame works such as DJango or Flask.
 
 Looking at the comments.py file, this is what is created:
@@ -104,7 +109,7 @@ This class can be used very simply as follows:
 	from comments import comments
 
 	def add_comment(entryid):
-		c = comments()
+		c = comments('sqlcreds.txt')
 		comments.add("This blog is awesome!",entryid)
 		return True
 
