@@ -1,0 +1,27 @@
+<?
+
+	require_once("DatabaseTool.class.php");
+
+	class <!camel_table_name!>Manager
+	{
+		function add()
+		{
+		}
+
+		function get()
+		{
+		}
+
+		function getall()
+		{
+		}
+
+		function delete()
+		{
+		}
+
+		function update()
+		{
+		}
+	}
+

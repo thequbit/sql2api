@@ -1,7 +1,8 @@
 import MySQLdb as mdb
 import _mysql as mysql
+import re
 
-def class <!table_name!>:
+class <!table_name!>:
 
     __settings = {}
     __con = False
@@ -19,7 +20,7 @@ def class <!table_name!>:
             if m is None:
                 continue
 
-            __settings[m.group(1)] = m.group(2)
+            self.__settings[m.group(1)] = m.group(2)
         f.close()
 
         # create connection
@@ -51,7 +52,7 @@ def class <!table_name!>:
 
         return _<!table_name!>
 
-    def delete(self,<!primary_key_value!>):
+    def delete(self,<!column_name_primary_key!>):
         with self.__con:
             cur = self.__con.cursor()
             cur.execute("DELETE FROM <!table_name!> WHERE <!column_name_primary_key!> = %s",(<!column_name_primary_key!>))
