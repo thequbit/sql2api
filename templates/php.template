@@ -79,7 +79,7 @@
 			return $retArray;
 		}
 
-		function delete(<!column_name_primary_key!>)
+		function del($<!column_name_primary_key!>)
 		{
 			try
 			{
