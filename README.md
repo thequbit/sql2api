@@ -6,7 +6,7 @@ A tool that will take in sql, and spit out python and php code for quick API gen
 This tool takes in SQL scripts and spits out (currently) python classes and php classes to help streamline the generation of simple to use web API's.  The steps between getting database data out of the database and onto the web via simple JSON API's can sometimes be challenging, and time consuming.  This tool's objective is to simplify that process.
 
 	Usage:
-	> python generate.py <file.sql>
+	> python sql2api.py <file.sql>
 
 The tool pulls template files from the ./templates directory and uses them to generate the output scripts.  Modifying those templates will allow you to quickly, and simply add 'base line' functionality to your API system.
 
@@ -29,9 +29,9 @@ First, we create our sql that creates our database and tables within it:
 	foreign key (entryid) references entries(entryid)
 	);
 	
-Now that we have defined our database structure, we can pass it into sql2api's generate.py script, and it will generate some python classes so we can interface to the database, as well as some php code that will serv up json's of the data within the database.
+Now that we have defined our database structure, we can pass it into the sql2api.py script, and it will generate some python classes so we can interface to the database, as well as some php code that will serv up json's of the data within the database.
 
-	$ python generate.py myblog.sql
+	$ python sql2api.py myblog.sql
 	Application starting ...
 
 	[INFO] Parsing SQL ...
@@ -58,7 +58,7 @@ The script generated the following files:
 
 These files are generated using the nomenclatures within the SQL that were passed into the script.  All naming conventions are carried through across all generated files.
 
-NOTE: you *must* edit sqlcredentials.php and sqlcreds.txt to add your specific SQL credentials.  (todo: I will add grant keyword parsing to parse() function within generate.py at some point)
+NOTE: you *must* edit sqlcredentials.php and sqlcreds.txt to add your specific SQL credentials.  (todo: I will add grant keyword parsing to parse() function within sql2api.py at some point)
 
 
 PHP
