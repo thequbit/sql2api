@@ -1,6 +1,6 @@
 create database testdb2;
 
-create table users ( userid int not null auto_incrementing primary key, username text not null, passwordhash text not null, displayname text not null);
+create table users ( userid int not null auto_increment primary key, username text not null, passwordhash text not null, displayname text not null);
 
 create table facts (
 
@@ -11,3 +11,5 @@ foreign key (userid) references users(userid)
 
 )
 ;
+
+create table hits( hitid int not null auto_increment primary key, ipaddress text not null, hitdt datetime not null);
