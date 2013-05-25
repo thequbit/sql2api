@@ -65,6 +65,18 @@ def createphp(dbname,tables):
                 column_name_primary_key = cname
                 break
 
+        update_value_string = ""
+        for col in columns:
+            cname,ctype,ciskey = col
+            if ciskey == False:
+                update_value_string += "{0} = ?,".format(cname)
+        update_value_string = update_value_string[:-1] # remove last comma
+
+        update_s_string = ""
+        for col in columns:
+            cname,ctype,ciskey = col
+            update_s_string += "s"
+
         php = php.replace("<!table_name!>",table_name)
         php = php.replace("<!camel_table_name!>",camel_table_name)
         php = php.replace("<!csv_no_primary_key_column_names!>",csv_no_primary_key_column_names)
@@ -73,6 +85,8 @@ def createphp(dbname,tables):
         php = php.replace("<!insert_s_string!>",insert_s_string)
         php = php.replace("<!array_contents!>",array_contents)
         php = php.replace("<!column_name_primary_key!>",column_name_primary_key)
+        php = php.replace("<!update_value_string!>",update_value_string)
+        php = php.replace("<!update_s_string!>",update_s_string)
 
         apifile.write("\t\tcase \"{0}\":\n\t\t\trequire_once(\"{1}Manager.class.php\");\n\t\t\t$mgr = new {1}Manager();\n".format(table_name,camel_table_name))
         apifile.write("\t\t\techo json_encode($mgr->getall());\n\t\t\tbreak;\n\n");
