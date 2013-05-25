@@ -98,8 +98,23 @@
 			}
 		}
 
-		function update()
+		function update(<!csv_key_column_names!>)
 		{
+			try
+			{
+				$db = new DatabaseTool(); 
+				$query = 'DELETE FROM <!table_name!> WHERE <!column_name_primary_key!> = ?)';
+				$mysqli = $db->Connect();
+				$stmt = $mysqli->prepare($query);
+				$stmt->bind_param("<!insert_s_string!>", <!phpafied_column_names!>);
+				$results = $db->Execute($stmt);
+	
+				$db->Close($mysqli, $stmt);
+			}
+			catch (Exception $e)
+			{
+				error_log( "Caught exception: " . $e->getMessage() );
+			}
 		}
 	}
 
