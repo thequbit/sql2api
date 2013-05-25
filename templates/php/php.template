@@ -84,7 +84,7 @@
 			try
 			{
 				$db = new DatabaseTool(); 
-				$query = 'DELETE FROM <!table_name!> WHERE <!column_name_primary_key!> = ?)';
+				$query = 'DELETE FROM <!table_name!> WHERE <!column_name_primary_key!> = ?';
 				$mysqli = $db->Connect();
 				$stmt = $mysqli->prepare($query);
 				$stmt->bind_param("s", $<!column_name_primary_key!>);
@@ -103,7 +103,7 @@
 			try
 			{
 				$db = new DatabaseTool(); 
-				$query = 'UPDATE <!table_name!> SET <!update_value_string!> WHERE <!column_name_primary_key!> = ?)';
+				$query = 'UPDATE <!table_name!> SET <!update_value_string!> WHERE <!column_name_primary_key!> = ?';
 				$mysqli = $db->Connect();
 				$stmt = $mysqli->prepare($query);
 				$stmt->bind_param("<!update_s_string!>", <!phpafied_column_names!>, $<!column_name_primary_key!>);
