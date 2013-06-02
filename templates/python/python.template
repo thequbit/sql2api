@@ -27,10 +27,14 @@ class <!table_name!>:
         # create connection
         self.__con = mdb.connect(host=self.__settings['host'], user=self.__settings['username'], passwd=self.__settings['password'], db=self.__settings['database'])
 
+    def sanitize(self,valuein):
+        valueout = mysql.escape_string(valuein)
+        return valuein
+
     def add(self,<!csv_no_primary_key_column_names!>):
         with self.__con:
             cur = self.__con.cursor()
-            cur.execute("INSERT INTO <!table_name!>(<!csv_no_primary_key_column_names!>) VALUES(<!insert_value_string!>)",(<!csv_no_primary_key_column_names!>))
+            cur.execute("INSERT INTO <!table_name!>(<!csv_no_primary_key_column_names!>) VALUES(<!insert_value_string!>)",(<!csv_no_primary_key_column_names_sanitized!>))
             cur.close()
             newid = cur.lastrowid
         return newid
@@ -64,9 +68,7 @@ class <!table_name!>:
     def update(self,<!csv_column_names!>):
         with self.__con:
             cur = self.__con.cursor()
-            cur.execute("UPDATE <!table_name!> SET <!update_value_string!> WHERE <!column_name_primary_key!> = %s",(<!csv_no_primary_key_column_names!>,<!column_name_primary_key!>))
+            cur.execute("UPDATE <!table_name!> SET <!update_value_string!> WHERE <!column_name_primary_key!> = %s",(<!csv_no_primary_key_column_names_sanitized!>,<!column_name_primary_key_sanitized!>)))
             cur.close()
 
-
-
-
+##### Application Specific Functions #####

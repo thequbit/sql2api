@@ -33,6 +33,13 @@ def createpython(dbname,tables):
                 csv_no_primary_key_column_names += "{0},".format(cname)
         csv_no_primary_key_column_names = csv_no_primary_key_column_names[:-1] # remove last comma
 
+        csv_no_primary_key_column_names_sanitized = ""
+        for col in columns:
+            cname,ctype,ciskey = col
+            if ciskey == False:
+                csv_no_primary_key_column_names_sanitized += "self.__sanitize({0}),".format(cname)
+        csv_no_primary_key_column_names_sanitized = csv_no_primary_key_column_names_sanitized[:-1] # remove last comma
+
         insert_value_string = ""
         for col in columns:
             cname,ctype,ciskey = col
@@ -46,6 +53,13 @@ def createpython(dbname,tables):
             if ciskey == True:
                 column_name_primary_key = cname
                 break
+   
+        column_name_primary_key_sanitized = ""
+        for col in columns:
+            cname,ctype,ciskey = col
+            if ciskey == True:
+                column_name_primary_key_sanitized = "self.__sanitize({0}".format(cname)
+                break
 
         update_value_string = ""
         for col in columns:
@@ -57,8 +71,10 @@ def createpython(dbname,tables):
         python = python.replace("<!table_name!>",table_name)
         python = python.replace("<!csv_column_names!>",csv_column_names)
         python = python.replace("<!csv_no_primary_key_column_names!>",csv_no_primary_key_column_names)
+        python = python.replace("<!csv_no_primary_key_column_names_sanitized!>",csv_no_primary_key_column_names_sanitized)
         python = python.replace("<!insert_value_string!>",insert_value_string)
         python = python.replace("<!column_name_primary_key!>",column_name_primary_key)
+        python = python.replace("<!column_name_primary_key_sanitized!>",column_name_primary_key_sanitized)
         python = python.replace("<!update_value_string!>",update_value_string)
 
         with open("./python/{0}.py".format(tablename),"w") as f:
