@@ -7,7 +7,8 @@ class <!table_name!>:
     __settings = {}
     __con = False
 
-    def __init__(self,configfile):
+    def __init__(self):
+        configfile = "sqlcreds.txt"
         f = open(configfile)
         for line in f:
             # skip comment lines
@@ -31,6 +32,8 @@ class <!table_name!>:
             cur = self.__con.cursor()
             cur.execute("INSERT INTO <!table_name!>(<!csv_no_primary_key_column_names!>) VALUES(<!insert_value_string!>)",(<!csv_no_primary_key_column_names!>))
             cur.close()
+            newid = cur.lastrowid
+        return newid
 
     def get(self,<!column_name_primary_key!>):
         with self.__con:
