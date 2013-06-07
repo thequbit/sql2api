@@ -98,7 +98,7 @@
 			}
 		}
 
-		function update(<!csv_key_column_names!>)
+		function update(<!phpafied_column_names!>)
 		{
 			try
 			{
