@@ -48,6 +48,7 @@ class <!table_name!>:
             cur.execute("SELECT * FROM <!table_name!> WHERE <!column_name_primary_key!> = %s",(<!column_name_primary_key!>))
             row = cur.fetchone()
             cur.close()
+        return row
 
     def getall(self):
         with self.__con:
