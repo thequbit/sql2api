@@ -97,20 +97,20 @@ Looking at the comments.py file, this is what is created:
 
 	class comments:
 
-		def __init__(self,configfile):
-		def add(self,commenttext,entryid):
-		def get(self,commentid):
-		def getall(self):
-		def delete(self,commentid):
-		def update(self,commentid,commenttext,entryid):
+	    def __init__(self,configfile):
+	    def add(self,commenttext,entryid):
+	    def get(self,commentid):
+	    def getall(self):
+	    def delete(self,commentid):
+	    def update(self,commentid,commenttext,entryid):
 
 This class can be used very simply as follows:
 
 	from comments import comments
 
 	def add_comment(entryid):
-		c = comments('sqlcreds.txt')
-		comments.add("This blog is awesome!",entryid)
-		return True
+	    c = comments()
+	    c.add("This blog is awesome!",entryid)
+        
 
-If you would like additional languages/templates supported please let me know, or pull request your own!
+If you would like additional languages/templates supported please let me know.
