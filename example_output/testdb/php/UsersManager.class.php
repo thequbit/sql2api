@@ -84,7 +84,7 @@
 			try
 			{
 				$db = new DatabaseTool(); 
-				$query = 'DELETE FROM users WHERE userid = ?)';
+				$query = 'DELETE FROM users WHERE userid = ?';
 				$mysqli = $db->Connect();
 				$stmt = $mysqli->prepare($query);
 				$stmt->bind_param("s", $userid);
@@ -98,12 +98,12 @@
 			}
 		}
 
-		function update(<!csv_key_column_names!>)
+		function update($username,$passwordhash,$firstname,$lastname,$dob)
 		{
 			try
 			{
 				$db = new DatabaseTool(); 
-				$query = 'UPDATE users SET username = ?,passwordhash = ?,firstname = ?,lastname = ?,dob = ? WHERE userid = ?)';
+				$query = 'UPDATE users SET username = ?,passwordhash = ?,firstname = ?,lastname = ?,dob = ? WHERE userid = ?';
 				$mysqli = $db->Connect();
 				$stmt = $mysqli->prepare($query);
 				$stmt->bind_param("ssssss", $username,$passwordhash,$firstname,$lastname,$dob, $userid);
@@ -116,6 +116,9 @@
 				error_log( "Caught exception: " . $e->getMessage() );
 			}
 		}
+
+		///// Application Specific Functions
+
 	}
 
 ?>
