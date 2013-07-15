@@ -77,6 +77,14 @@ def createpython(dbname,tables):
         python = python.replace("<!column_name_primary_key_sanitized!>",column_name_primary_key_sanitized)
         python = python.replace("<!update_value_string!>",update_value_string)
 
+        #with open("../templates/python/python.search.template") as f:
+        #    search_functions = f.read()
+        #
+        #if 'latitude' in [x[0] for x in columns] and 'longitude' in [x[0] for x in columns]:
+        #    search_function
+        #
+        #python = python.replace("<!search_functions!)>",search_functions)
+
         with open("./python/{0}.py".format(tablename),"w") as f:
             f.write(python)
             f.close()

@@ -24,8 +24,9 @@ class <!table_name!>:
             self.__settings[m.group(1)] = m.group(2)
         f.close()
 
-        # create connection
-        self.__con = mdb.connect(host=self.__settings['host'], user=self.__settings['username'], passwd=self.__settings['password'], db=self.__settings['database'])
+    def __connect():
+        con = mdb.connect(host=self.__settings['host'], user=self.__settings['username'], passwd=self.__settings['password'], db=self.__settings['database'])
+        return con
 
     def __sanitize(self,valuein):
         if type(valuein) == 'str':
@@ -35,44 +36,63 @@ class <!table_name!>:
         return valuein
 
     def add(self,<!csv_no_primary_key_column_names!>):
-        with self.__con:
-            cur = self.__con.cursor()
+        con = self.__connect()
+        with con:
+            cur = con.cursor()
             cur.execute("INSERT INTO <!table_name!>(<!csv_no_primary_key_column_names!>) VALUES(<!insert_value_string!>)",(<!csv_no_primary_key_column_names_sanitized!>))
             cur.close()
             newid = cur.lastrowid
+        con.close()
         return newid
 
     def get(self,<!column_name_primary_key!>):
-        with self.__con:
-            cur = self.__con.cursor()
+        con = self.__connect()
+        with con:
+            cur = con.cursor()
             cur.execute("SELECT * FROM <!table_name!> WHERE <!column_name_primary_key!> = %s",(<!column_name_primary_key!>))
             row = cur.fetchone()
             cur.close()
+        con.close()
         return row
 
     def getall(self):
-        with self.__con:
-            cur = self.__con.cursor()
+        con = self.__connect()
+        with con:
+            cur = con.cursor()
             cur.execute("SELECT * FROM <!table_name!>")
             rows = cur.fetchall()
             cur.close()
-
         _<!table_name!> = []
         for row in rows:
             _<!table_name!>.append(row)
-
+        con.close()
         return _<!table_name!>
 
     def delete(self,<!column_name_primary_key!>):
-        with self.__con:
-            cur = self.__con.cursor()
+        con = self.__connect()
+        with con:
+            cur = con.cursor()
             cur.execute("DELETE FROM <!table_name!> WHERE <!column_name_primary_key!> = %s",(<!column_name_primary_key!>))
             cur.close()
+        con.close()
 
     def update(self,<!csv_column_names!>):
-        with self.__con:
-            cur = self.__con.cursor()
+        con = self.__connect()
+        with con:
+            cur = con.cursor()
             cur.execute("UPDATE <!table_name!> SET <!update_value_string!> WHERE <!column_name_primary_key!> = %s",(<!csv_no_primary_key_column_names_sanitized!>,<!column_name_primary_key_sanitized!>)))
             cur.close()
+        con.close()
 
 ##### Application Specific Functions #####
+
+#    def myfunc():
+#        con = self.__connect()
+#        with con:
+#            cur = son.cursor()
+#            cur.execute("")
+#            row = cur.fetchone()
+#            cur.close()
+#        con.close()
+#        return row
+
