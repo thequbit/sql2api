@@ -24,7 +24,7 @@ class <!table_name!>:
             self.__settings[m.group(1)] = m.group(2)
         f.close()
 
-    def __connect():
+    def __connect(self):
         con = mdb.connect(host=self.__settings['host'], user=self.__settings['username'], passwd=self.__settings['password'], db=self.__settings['database'])
         return con
 
