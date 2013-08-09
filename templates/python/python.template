@@ -10,7 +10,7 @@ class <!table_name!>:
     def __init__(self,host,user,passwd,db):
         self.__settings['host'] = host
         self.__settings['username'] = user
-        selt.__settings['password'] = passwd
+        self.__settings['password'] = passwd
         self.__settings['database'] = db
     def __connect(self):
         con = mdb.connect(host=self.__settings['host'], user=self.__settings['username'],
