@@ -61,7 +61,7 @@ class <!table_name!>:
         con = self.__connect()
         with con:
             cur = con.cursor()
-            cur.execute("DELETE FROM <!table_name!> WHERE <!column_name_primary_key!> = %s",(<!column_name_primary_key!>))
+            cur.execute("DELETE FROM <!table_name!> WHERE <!column_name_primary_key!> = %s",(<!column_name_primary_key_sanitized!>))
             cur.close()
         con.close()
 
