@@ -7,10 +7,14 @@ from python import createpython
 
 def main(argv):
 
-    print "Application starting ...\n"
+    if len(argv) != 2:
+        print "\nUsage:\n\tpython sql2api.py <file.sql>\n\n"
+        return
+
+    filename = argv[1]
 
     # open the sql script
-    with open(argv[1]) as f:
+    with open(filename) as f:
         sql = f.read()
 
     # some pre-processing
@@ -22,7 +26,7 @@ def main(argv):
     # create a folder called the database name and change our working directory to it
     if not os.path.exists(dbname):
         os.makedirs(dbname)
-    os.chdir(dbname)
+    #os.chdir(dbname)
 
 
     #
@@ -30,7 +34,7 @@ def main(argv):
     #
 
     # generate python classes to interface to the DB
-    python = createpython(dbname,tables)
+    python = createpython(filename,dbname,tables)
 
     # generate php classes to interface to the DB
     php = createphp(dbname,tables)
