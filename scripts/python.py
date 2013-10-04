@@ -18,13 +18,13 @@ def createpython(sqlfile,dbname,tables):
 
     # create our default config file with the correct database name in it
     config = ""
-    fn = "./{0}/python/models/config.ini".format(dbname)
+    fn = "./{0}/python/models/__dbcreds__.py".format(dbname)
     with open(fn,"w") as f:
-        config += "[sql2api]\n"
-        config += "username=\n"
-        config += "password=\n"
-        config += "database={0}\n".format(dbname)
-        config += "server=\n"
+        config += "\n### Configurion your SQL connection settings here ###\n\n"
+        config += "__username__ = ''\n"
+        config += "__password__ = ''\n"
+        config += "__database__ = '{0}'\n".format(dbname)
+        config += "__server__   = ''\n"
         f.write(config)
         f.close()
     print "[INFO] \t{0}".format(fn)
@@ -106,7 +106,7 @@ def createpython(sqlfile,dbname,tables):
             f.close()
         print "[INFO] \t{0}".format(fn)
         
-        model_imports += "import {0}\n".format(table_name)
+        model_imports += "from {0} import {0}\n".format(camel_table_name)
 
     with open("./templates/python/__init__.template","r") as f:
         init = f.read()
