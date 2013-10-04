@@ -10,6 +10,7 @@ def parsesql(sql):
 
     # make multiple spaces into single space
     re.sub(' +',' ',sql)
+    sql = sql.replace('\n','')
 
     #print "Parsing:\n\n{0}\n\n".format(sql)
 
@@ -28,22 +29,32 @@ def parsesql(sql):
     tables = []
 
     for statement in statements:
+ 
+        if statement == "":
+            continue
+
+        #print "[INFO] Working on: '{0}'".format(statement)
 
         statement = statement.strip()
+
+        statement = re.sub(' +',' ',statement)
 
         parts = statement.split(" ")
 
         if parts[0].lower() == "create" and len(parts) >= 2:
 
+            #print "Found 'create' statement"
+
             if parts[1].lower() == "database" and len(parts) >= 3:
-                dbname = parts[:-1].strip().replace(";","")
+                dbname = parts[-1].strip().replace(";","")
                 print "[INFO] Database Name: {0}".format(dbname)
 
-
             if parts[1].lower() == "table" and len(parts) >= 3:
-                tname = parts[:-1].split("(")[0].strip()
+                firstpart = statement.split('(')[0].strip()
+                #print "firstpart: '{0}'".format(firstpart)
+                tname = firstpart.split(" ")[-1].strip()
                 meat = statement[statement.index("(")+1:]
-
+                #print "[INFO] Table Name: {0}".format(tname)
                 columns = []
                 cols = meat.split(",")
                 for col in cols:
