@@ -3,11 +3,11 @@ import os
 
 def createpython(sqlfile,dbname,tables):
 
-    print "[INFO] Generating Python Scripts ..."
+    print "[INFO] Generating Python Files ..."
 
     # create the python directory where everything will go
-    if not os.path.exists("python"):
-        os.makedirs("python")
+    if not os.path.exists("./{0}/python".format(dbname)):
+        os.makedirs("./{0}/python".format(dbname))
         os.makedirs("./{0}/python/models".format(dbname))
 
     # read in our python template that will be used to create our table
@@ -18,7 +18,8 @@ def createpython(sqlfile,dbname,tables):
 
     # create our default config file with the correct database name in it
     config = ""
-    with open("./{0}/python/models/config.ini".format(dbname),"w") as f:
+    fn = "./{0}/python/models/config.ini".format(dbname)
+    with open(fn,"w") as f:
         config += "[sql2api]\n"
         config += "username=\n"
         config += "password=\n"
@@ -26,11 +27,14 @@ def createpython(sqlfile,dbname,tables):
         config += "server=\n"
         f.write(config)
         f.close()
+    print "[INFO] \t{0}".format(fn)
 
     # fill in our table accessor template with the correct data
     model_imports = "\n"
     for table in tables:
         table_name,columns = table;
+
+        camel_table_name = "{0}{1}".format(table_name[0:1].upper(),table_name[1:])
 
         # set our base template
         python = base
@@ -86,6 +90,7 @@ def createpython(sqlfile,dbname,tables):
 
  
         # replace all of the template variables with the generated python code
+        python = python.replace("<!camel_table_name!>",camel_table_name)
         python = python.replace("<!table_name!>",table_name)
         python = python.replace("<!csv_column_names!>",csv_column_names)
         python = python.replace("<!csv_no_primary_key_column_names!>",csv_no_primary_key_column_names)
@@ -95,23 +100,25 @@ def createpython(sqlfile,dbname,tables):
         python = python.replace("<!column_name_primary_key_sanitized!>",column_name_primary_key_sanitized)
         python = python.replace("<!update_value_string!>",update_value_string)
 
-        with open("./python/models/{0}.py".format(table_name),"w") as f:
+        fn = "./{0}/python/models/{1}.py".format(dbname,camel_table_name)
+        with open(fn,"w") as f:
             f.write(python)
             f.close()
+        print "[INFO] \t{0}".format(fn)
         
         model_imports += "import {0}\n".format(table_name)
 
-    with open("./{0}/templates/python/__init__.template".format(dbname),"r") as f:
+    with open("./templates/python/__init__.template","r") as f:
         init = f.read()
         f.close()
     init = init.replace("<!model_imports!>",model_imports)
-    with open("./{0}/python/models/__init__.py".format(dbname),"w") as f:
+    fn = "./{0}/python/models/__init__.py".format(dbname)
+    with open(fn,"w") as f:
         f.write(init)
         f.close()
+    print "[INFO] \t{0}".format(fn)
 
-    shutil.copy2(sqlfile, "./{0}/python/models/definition.sql".format(dbname))
-    
-    print "[INFO] Done."
+    #shutil.copy2(sqlfile, "./{0}/python/models/definition.sql".format(dbname))
 
     return python
 
