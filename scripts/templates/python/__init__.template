@@ -1,0 +1,30 @@
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.read('config.ini')
+
+__sql_username__ = config.get('sql2api','username')
+__sql_password__ = config.get('sql2api','password')
+__sql_database__  = config.get('sql2api','database')
+__sql_server__ = config.get('sql2api','server')
+
+import MySQLdb as mdb
+import _mysql as mysql
+try:
+    con = mdb.connect(host=self.__sql_server__,
+                      user=self.__sql_username__,
+                      passwd=self.__sql_password__,
+                      db=self.__sql_database__,
+                     )
+    with open("definition.sql","r") as f:
+        sql = f.read()
+        f.close()
+    with con:
+        cur = con.cursor()
+        cur.execute(sql)
+        cur.close()
+    con.close()
+except Exception,e:
+    raise Exception("sql2api error - could not connect to the database:\n\n\t{0}".format(e))
+
+<!model_imports!>

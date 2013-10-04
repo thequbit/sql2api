@@ -36,12 +36,12 @@ def parsesql(sql):
         if parts[0].lower() == "create" and len(parts) >= 2:
 
             if parts[1].lower() == "database" and len(parts) >= 3:
-                dbname = parts[2].strip().replace(";","")
+                dbname = parts[:-1].strip().replace(";","")
                 print "[INFO] Database Name: {0}".format(dbname)
 
 
             if parts[1].lower() == "table" and len(parts) >= 3:
-                tname = parts[2].split("(")[0].strip()
+                tname = parts[:-1].split("(")[0].strip()
                 meat = statement[statement.index("(")+1:]
 
                 columns = []
