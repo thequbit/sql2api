@@ -2,7 +2,7 @@ import MySQLdb as mdb
 import _mysql as mysql
 import re
 
-class <!table_name!>:
+class <!camel_table_name!>:
 
     __con = False
 
