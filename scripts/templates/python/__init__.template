@@ -11,10 +11,10 @@ __sql_server__ = config.get('sql2api','server')
 import MySQLdb as mdb
 import _mysql as mysql
 try:
-    con = mdb.connect(host=self.__sql_server__,
-                      user=self.__sql_username__,
-                      passwd=self.__sql_password__,
-                      db=self.__sql_database__,
+    con = mdb.connect(host = __sql_server__,
+                      user = __sql_username__,
+                      passwd = __sql_password__,
+                      db = __sql_database__,
                      )
     with open("definition.sql","r") as f:
         sql = f.read()
