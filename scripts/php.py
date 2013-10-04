@@ -1,27 +1,44 @@
-import shutil
+import distutils.core
 import os
 
 def createphp(dbname,tables):
 
-    print "[INFO] Generating PHP Classes ..."
+    print "[INFO] Generating PHP Files ..."
 
     php = ""
 
-    if not os.path.exists("php"):
-        os.makedirs("php")
+    if not os.path.exists("./{0}/php".format(dbname)):
+        os.makedirs("./{0}/php".format(dbname))
 
-    apifile = open("./php/getall.php","w")
-    apifile.write('<?\n\n\trequire_once("DatabaseTool.class.php");\n\n\t$from = $_GET["from"];\n\n\tswitch($from)\n\t{\n\t\tdefault:\n\t\t\techo "{}";\n\t\t\tbreak;\n\n')
+    apifn = "./{0}/php/getall.php".format(dbname)
+    apifile = open(apifn,"w")
+    apifile.write(
+"""
+<?\n
+\trequire_once("DatabaseTool.class.php");
+
+\t$from = $_GET["from"];
+
+\tswitch($from)
+\t{
+
+\t\tdefault:
+\t\t\techo "{}";
+\t\t\tbreak;
+
+"""
+                 )
+
+    basephp = ""
+    with open("./templates/php/php.template") as f:
+        basephp = f.read()
+        f.close()
 
     for table in tables:
 
-        with open("../templates/php/php.template") as f:
-            php = f.read()
-            f.close()
+        php = basephp
 
-        (tablename,columns) = table;
-
-        table_name = tablename
+        (table_name,columns) = table;
 
         camel_table_name = "{0}{1}".format(table_name[0:1].upper(),table_name[1:])
 
@@ -88,28 +105,48 @@ def createphp(dbname,tables):
         php = php.replace("<!update_value_string!>",update_value_string)
         php = php.replace("<!update_s_string!>",update_s_string)
 
-        apifile.write("\t\tcase \"{0}\":\n\t\t\trequire_once(\"{1}Manager.class.php\");\n\t\t\t$mgr = new {1}Manager();\n".format(table_name,camel_table_name))
-        apifile.write("\t\t\techo json_encode($mgr->getall());\n\t\t\tbreak;\n\n");
+        apifile.write(
+"""
+\t\tcase \"{0}\":
+\t\t\trequire_once(\"{1}Manager.class.php\");
+\t\t\t$mgr = new {1}Manager();
+""".format(table_name,camel_table_name)
+                     )
 
-        with open("./php/{0}Manager.class.php".format(camel_table_name),"w") as f:
+        apifile.write(
+"""
+\t\t\techo json_encode($mgr->getall());
+
+\t\t\tbreak;
+"""                  );
+
+        fn = "./{0}/php/{1}Manager.class.php".format(dbname,camel_table_name)
+        with open(fn,"w") as f:
             f.write(php)
             f.close()
+        print "[INFO] \t{0}".format(fn)
 
-        with open("./php/sqlcredentials.php","w") as f:
-            f.write("<?php\n")
-            f.write("\tdefine('MYSQL_HOST','');\n")
-            f.write("\tdefine('MYSQL_USER','');\n")
-            f.write("\tdefine('MYSQL_PASS','');\n")
-            f.write("\tdefine('MYSQL_DATABASE','{0}');\n".format(dbname))
-            f.write("?>\n")
-            f.close()
+    fn = "./{0}/php/sqlcredentials.php".format(dbname)
+    with open(fn,"w") as f:
+        f.write("<?php\n")
+        f.write("\tdefine('MYSQL_HOST','');\n")
+        f.write("\tdefine('MYSQL_USER','');\n")
+        f.write("\tdefine('MYSQL_PASS','');\n")
+        f.write("\tdefine('MYSQL_DATABASE','{0}');\n".format(dbname))
+        f.write("?>\n")
+        f.close()
+    print "[INFO] \t{0}".format(fn)
+        #try:
+        #shutil.copy2("./templates/php/tocopy/*", "./{0}/php/".format(dbname))
+        #except:
+        #    pass 
 
-        try:
-            shutil.copy2("../templates/php/tocopy/*", "./php")
-        except:
-            continue
+    distutils.dir_util.copy_tree("./templates/php/tocopy/", "./{0}/php/".format(dbname))
 
     apifile.write("\t}\n\n?>")
+
+    apifile.close()
+    print "[INFO] \t{0}".format(apifn)
 
     return php
 
