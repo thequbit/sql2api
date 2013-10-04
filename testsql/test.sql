@@ -1,6 +1,6 @@
-create database testdb;
+create database if exists testdb;
 
-create table users(
+create table if exists users(
 userid int not null auto_incremenet primary key,
 username text not null,
 passwordhash text not null,
